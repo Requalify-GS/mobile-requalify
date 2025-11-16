@@ -1,13 +1,17 @@
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import logoRequalify from "../../assets/logo-requalify.png";
 import TextField from "../components/TextField";
+import { RootStackParamList } from "../navigation/AppNavigator";
 
-export default function App() {
+export default function LoginScreen() {
   const [isPassword, setIsPassword] = useState(true);
   const icon = isPassword ? "eye" : "eye-off";
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
@@ -21,7 +25,12 @@ export default function App() {
           <Text style={styles.subtitle}>
             Se você ainda não possui uma conta
           </Text>
-          <Text style={styles.signUpText}>Cadastre-se</Text>
+          <Text
+            style={styles.signUpText}
+            onPress={() => navigation.navigate("SignUp")}
+          >
+            Cadastre-se
+          </Text>
         </View>
 
         <TextField label="Email" placeholder="Informe seu email" />
