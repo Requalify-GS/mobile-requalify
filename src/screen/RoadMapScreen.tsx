@@ -49,7 +49,7 @@ export default function RoadMapScreen() {
   const [visible, setVisible] = useState(false);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
       <ScrollView
         style={styles.roadmaps}
         contentContainerStyle={{ alignItems: "center" }}
