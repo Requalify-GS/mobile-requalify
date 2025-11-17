@@ -1,4 +1,5 @@
 import Feather from "@expo/vector-icons/Feather";
+import { useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -7,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import CreateRoadmapDialog from "../components/CreateRoadmapDialog";
 import Header from "../components/Header";
 import RoadmapCard from "../components/RoadmapCard";
 
@@ -44,28 +46,34 @@ const roadmaps = [
 ];
 
 export default function RoadMapScreen() {
+  const [visible, setVisible] = useState(false);
+
   return (
     <SafeAreaView style={styles.container}>
-      <Header label="Seus RoadMaps" />
-      <View style={styles.body}>
-        <TouchableOpacity style={styles.button}>
-          <Feather name="plus" size={26} color="#fff" />
-          <Text style={styles.buttonText}>Criar novos</Text>
-        </TouchableOpacity>
-      </View>
       <ScrollView
         style={styles.roadmaps}
-        contentContainerStyle={{ alignItems: "center", gap: 15 }}
+        contentContainerStyle={{ alignItems: "center" }}
       >
-        {roadmaps.map((roadmap) => (
-          <RoadmapCard
-            key={roadmap.id}
-            roadmapId={roadmap.id}
-            roadmapTitle={roadmap.title}
-            roadmapDescription={roadmap.description}
-          />
-        ))}
+        <Header label="Seus RoadMaps" />
+        <View style={styles.body}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setVisible(true)}
+          >
+            <Feather name="plus" size={26} color="#fff" />
+            <Text style={styles.buttonText}>Criar novo</Text>
+          </TouchableOpacity>
+          {roadmaps.map((roadmap) => (
+            <RoadmapCard
+              key={roadmap.id}
+              roadmapId={roadmap.id}
+              roadmapTitle={roadmap.title}
+              roadmapDescription={roadmap.description}
+            />
+          ))}
+        </View>
       </ScrollView>
+      <CreateRoadmapDialog visible={visible} setVisible={setVisible} />
     </SafeAreaView>
   );
 }
@@ -79,7 +87,8 @@ const styles = StyleSheet.create({
   body: {
     width: "100%",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 15,
+    gap: 15,
   },
   button: {
     backgroundColor: "#F2A70D",
