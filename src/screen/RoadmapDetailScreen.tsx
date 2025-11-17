@@ -1,8 +1,10 @@
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+import CheckpointCard from "../components/CheckpointCard";
 import Header from "../components/Header";
 import { TabParamList } from "../navigation/TabNavigator";
 
@@ -17,18 +19,26 @@ export default function RoadmapDetailScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
-      <Header label={targetOccupation} description={description} />
-      <View style={styles.actions}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <MaterialIcons name="arrow-back-ios-new" size={24} color="#fff" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.deleteButton}>
-          <FontAwesome5 name="trash" size={24} color="#FF0000" />
-        </TouchableOpacity>
-      </View>
+      <ScrollView
+        style={{ width: "100%" }}
+        contentContainerStyle={{ gap: 15, alignItems: "center" }}
+      >
+        <Header label={targetOccupation} description={description} />
+        <View style={styles.actions}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <MaterialIcons name="arrow-back-ios-new" size={24} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.deleteButton}>
+            <FontAwesome5 name="trash" size={24} color="#FF0000" />
+          </TouchableOpacity>
+        </View>
+        {checkpoints.map((checkpoint) => (
+          <CheckpointCard key={checkpoint.id} checkpoint={checkpoint} />
+        ))}
+      </ScrollView>
     </SafeAreaView>
   );
 }

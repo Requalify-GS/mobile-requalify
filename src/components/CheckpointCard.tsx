@@ -1,0 +1,57 @@
+import Fontisto from "@expo/vector-icons/Fontisto";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
+import { Checkpoint } from "../types/roadmap.type";
+import { truncateEllipsis } from "../utils/string";
+
+interface Props {
+  checkpoint: Checkpoint;
+}
+
+export default function CheckpointCard({ checkpoint }: Props) {
+  return (
+    <View>
+      <TouchableOpacity style={styles.checkpointCard}>
+        <Ionicons name="flag-sharp" size={24} color="black" />
+        <View style={styles.checkpointInfo}>
+          <Text style={styles.checkpointTitle}>
+            {truncateEllipsis(checkpoint.title, 25)}
+          </Text>
+          <Text style={styles.checkpointDescription}>
+            {truncateEllipsis(checkpoint.description, 72)}
+          </Text>
+        </View>
+        <Fontisto name="share-a" size={20} color="#000" />
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  checkpointCard: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    borderRadius: 20,
+    backgroundColor: "#fff",
+    width: "95%",
+    height: 111,
+    padding: 15,
+  },
+  checkpointInfo: {
+    gap: 10,
+  },
+  checkpointTitle: {
+    color: "#000",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  checkpointDescription: {
+    color: "#7c7c7c",
+    fontSize: 13,
+    fontWeight: "bold",
+    width: 273,
+  },
+});
