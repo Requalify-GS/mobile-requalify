@@ -12,6 +12,10 @@ export default function LoginScreen() {
   const icon = isPassword ? "eye" : "eye-off";
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
+  const login = () => {
+    navigation.navigate("Tabs");
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
@@ -48,7 +52,7 @@ export default function LoginScreen() {
           }
         />
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => login()}>
           <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
       </View>
