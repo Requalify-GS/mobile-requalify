@@ -1,24 +1,29 @@
 import Fontisto from "@expo/vector-icons/Fontisto";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { TabParamList } from "../navigation/TabNavigator";
+import { Roadmap } from "../types/roadmap.type";
 import { truncateEllipsis } from "../utils/string";
 
 interface Props {
-  roadmapTitle: string;
-  roadmapDescription: string;
-  roadmapId: string;
+  roadmap: Roadmap;
 }
 
-export default function RoadmapCard({
-  roadmapTitle,
-  roadmapDescription,
-  roadmapId,
-}: Props) {
+export default function RoadmapCard({ roadmap }: Props) {
+  const navigation = useNavigation<NavigationProp<TabParamList>>();
+
+  const handlePress = () => {
+    navigation.navigate("RoadmapDetail", { roadmap });
+  };
+
   return (
-    <TouchableOpacity style={styles.roadmapCard}>
+    <TouchableOpacity style={styles.roadmapCard} onPress={handlePress}>
       <View style={styles.roadmapInfo}>
-        <Text style={styles.roadmapTitle}>{roadmapTitle}</Text>
+        <Text style={styles.roadmapTitle}>
+          {truncateEllipsis(roadmap.targetOccupation, 25)}
+        </Text>
         <Text style={styles.roadmapDescription}>
-          {truncateEllipsis(roadmapDescription, 35)}
+          {truncateEllipsis(roadmap.description || "", 35)}
         </Text>
       </View>
       <Fontisto name="share-a" size={22} color="#fff" />
