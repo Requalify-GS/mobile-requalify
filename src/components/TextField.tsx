@@ -2,11 +2,12 @@ import { StyleSheet } from "react-native";
 import { HelperText, TextInput } from "react-native-paper";
 
 interface Props {
-  label: string;
+  label?: string;
   mode?: "flat" | "outlined";
   placeholder?: string;
   isPassword?: boolean;
   right?: React.ReactNode;
+  left?: React.ReactNode;
   helperText?: string;
 }
 
@@ -16,6 +17,7 @@ export default function TextField({
   placeholder,
   isPassword = false,
   right,
+  left,
   helperText,
 }: Props) {
   return (
@@ -38,6 +40,7 @@ export default function TextField({
         textColor="#fff"
         placeholderTextColor="#999"
         right={right}
+        left={left}
       />
       {helperText && <HelperText type="info">{helperText}</HelperText>}
     </>

@@ -1,9 +1,12 @@
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
+import JobsScreen from "../screen/JobsScreen";
 import RoadMapScreen from "../screen/RoadMapScreen";
 
 export type TabParamList = {
+  Jobs: undefined;
   RoadMap: undefined;
 };
 
@@ -22,6 +25,16 @@ export default function TabNavigator() {
         },
       }}
     >
+      <Tab.Screen
+        name="Jobs"
+        component={JobsScreen}
+        options={{
+          title: "Vagas",
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome5 name="briefcase" size={size} color={color} />
+          ),
+        }}
+      />
       <Tab.Screen
         name="RoadMap"
         component={RoadMapScreen}
