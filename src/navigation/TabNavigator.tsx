@@ -1,13 +1,15 @@
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
+import CheckpointDetailScreen from "../screen/CheckpointDetailScreen";
 import RoadMapScreen from "../screen/RoadMapScreen";
 import RoadmapDetailScreen from "../screen/RoadmapDetailScreen";
-import { RoadmapNavigationParams } from "../types/roadmap.type";
+import { Checkpoint, RoadmapNavigationParams } from "../types/roadmap.type";
 
 export type TabParamList = {
   RoadMap: undefined;
   RoadmapDetail: RoadmapNavigationParams;
+  CheckpointDetail: { checkpoint: Checkpoint };
 };
 
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -42,6 +44,13 @@ export default function TabNavigator() {
       <Tab.Screen
         name="RoadmapDetail"
         component={RoadmapDetailScreen}
+        options={{
+          tabBarButton: () => null,
+        }}
+      />
+      <Tab.Screen
+        name="CheckpointDetail"
+        component={CheckpointDetailScreen}
         options={{
           tabBarButton: () => null,
         }}
