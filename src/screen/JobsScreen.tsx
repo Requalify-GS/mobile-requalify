@@ -1,8 +1,19 @@
 import { ScrollView, StyleSheet } from "react-native";
 import { TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import aluraLogo from "../../assets/alura.png";
 import Header from "../components/Header";
+import JobCard from "../components/JobCard";
 import TextField from "../components/TextField";
+
+const job = {
+  position: "Desenvolvedor React Native",
+  company: "Requalify",
+  companyLogo: aluraLogo,
+  location: "São Paulo, SP",
+  agoTime: "há 2 dias",
+  jobUrl: "https://www.linkedin.com/mynetwork/grow/",
+};
 
 export default function JobsScreen() {
   return (
@@ -16,6 +27,7 @@ export default function JobsScreen() {
           placeholder="Pesquisar"
           left={<TextInput.Icon icon="magnify" color="#999" />}
         />
+        <JobCard job={job} />
       </ScrollView>
     </SafeAreaView>
   );

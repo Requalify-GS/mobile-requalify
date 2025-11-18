@@ -24,6 +24,15 @@ export interface Roadmap {
   checkpoints: Checkpoint[];
 }
 
+export interface Job {
+  position: string;
+  company: string;
+  companyLogo: any;
+  location: string;
+  agoTime: string;
+  jobUrl: string;
+}
+
 export type RoadmapNavigationParams = {
   roadmap: Roadmap;
 };
