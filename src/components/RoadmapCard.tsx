@@ -2,7 +2,7 @@ import Fontisto from "@expo/vector-icons/Fontisto";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-import { TabParamList } from "../navigation/TabNavigator";
+import { RootStackParamList } from "../navigation/AppNavigator";
 import { Roadmap } from "../types/roadmap.type";
 import { truncateEllipsis } from "../utils/string";
 
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function RoadmapCard({ roadmap }: Props) {
-  const navigation = useNavigation<NavigationProp<TabParamList>>();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const handlePress = () => {
     navigation.navigate("RoadmapDetail", { roadmap });

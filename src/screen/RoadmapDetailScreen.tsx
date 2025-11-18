@@ -6,9 +6,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import CheckpointCard from "../components/CheckpointCard";
 import Header from "../components/Header";
-import { TabParamList } from "../navigation/TabNavigator";
+import { RootStackParamList } from "../navigation/AppNavigator";
 
-type RoadmapDetailRouteProp = RouteProp<TabParamList, "RoadmapDetail">;
+type RoadmapDetailRouteProp = RouteProp<RootStackParamList, "RoadmapDetail">;
 
 export default function RoadmapDetailScreen() {
   const route = useRoute<RoadmapDetailRouteProp>();

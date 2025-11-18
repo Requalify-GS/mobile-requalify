@@ -3,7 +3,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { TabParamList } from "../navigation/TabNavigator";
+import { RootStackParamList } from "../navigation/AppNavigator";
 import { Checkpoint } from "../types/roadmap.type";
 import { truncateEllipsis } from "../utils/string";
 
@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default function CheckpointCard({ checkpoint }: Props) {
-  const navigation = useNavigation<NavigationProp<TabParamList>>();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const seeDetails = () => {
     navigation.navigate("CheckpointDetail", { checkpoint });

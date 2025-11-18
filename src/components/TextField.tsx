@@ -18,7 +18,6 @@ export default function TextField({
   right,
   helperText,
 }: Props) {
-  const icon = isPassword ? "eye" : "eye-off";
   return (
     <>
       <TextInput

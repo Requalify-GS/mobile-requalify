@@ -1,10 +1,5 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import {
-  NavigationProp,
-  RouteProp,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import {
   ScrollView,
   StyleSheet,
@@ -14,13 +9,16 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CourseCard from "../components/CourseCard";
-import { TabParamList } from "../navigation/TabNavigator";
+import { RootStackParamList } from "../navigation/AppNavigator";
 
-type CheckpointDetailRouteProp = RouteProp<TabParamList, "CheckpointDetail">;
+type CheckpointDetailRouteProp = RouteProp<
+  RootStackParamList,
+  "CheckpointDetail"
+>;
 
 export default function CheckpointDetailScreen() {
   const route = useRoute<CheckpointDetailRouteProp>();
-  const navigation = useNavigation<NavigationProp<TabParamList>>();
+  const navigation = useNavigation();
 
   const { checkpoint } = route.params;
 
