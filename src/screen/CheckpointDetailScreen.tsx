@@ -5,8 +5,15 @@ import {
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import CourseCard from "../components/CourseCard";
 import { TabParamList } from "../navigation/TabNavigator";
 
 type CheckpointDetailRouteProp = RouteProp<TabParamList, "CheckpointDetail">;
@@ -34,6 +41,15 @@ export default function CheckpointDetailScreen() {
         <Text style={styles.description}>{checkpoint.description}</Text>
         <View style={styles.courses}>
           <Text style={styles.coursesTitle}>Cursos</Text>
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            {checkpoint.courses.map((course) => (
+              <CourseCard key={course.id} course={course} />
+            ))}
+          </ScrollView>
         </View>
       </View>
     </SafeAreaView>
@@ -73,13 +89,12 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 59,
     borderTopStartRadius: 59,
     gap: 20,
-    paddingHorizontal: 50,
-    paddingTop: 30,
   },
   description: {
     color: "#000",
     fontSize: 15,
-    alignItems: "center",
+    paddingHorizontal: 35,
+    paddingTop: 30,
   },
   coursesTitle: {
     fontSize: 20,
@@ -87,6 +102,15 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   courses: {
+    flex: 1,
     gap: 20,
+    width: "100%",
+    paddingHorizontal: 10,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    gap: 15,
   },
 });
