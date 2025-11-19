@@ -9,6 +9,7 @@ interface Props {
   right?: React.ReactNode;
   left?: React.ReactNode;
   helperText?: string;
+  options?: object;
 }
 
 export default function TextField({
@@ -19,6 +20,7 @@ export default function TextField({
   right,
   left,
   helperText,
+  options,
 }: Props) {
   return (
     <>
