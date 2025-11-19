@@ -1,56 +1,251 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+// src/screen/ProfileScreen.tsx
+import { useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../components/Header";
-import TextField from "../components/TextField";
+import BasicInformationSection from "../section/BasicInformationSection";
+import CertificationSection from "../section/CertificationSection";
+import EducationSection from "../section/EducationSection";
+import ExperienceSection from "../section/ExperienceSection";
 import ProfileSection from "../section/ProfileSection";
+import SkillsSection from "../section/SkillsSection";
+import { Resume } from "../types/roadmap.type";
 
 export default function ProfileScreen() {
+  const [resume, setResume] = useState<Resume>({
+    occupation: "",
+    summary: "",
+    skills: [],
+    educations: [
+      {
+        institution: "",
+        course: "",
+        educationLevel: "",
+        startDate: "",
+        endDate: "",
+        inProgress: false,
+      },
+    ],
+    experiences: [
+      {
+        company: "",
+        position: "",
+        startDate: "",
+        endDate: "",
+        currentJob: false,
+        description: "",
+      },
+    ],
+    certifications: [
+      {
+        name: "",
+        issuingOrganization: "",
+      },
+    ],
+  });
+
+  const handleAddSkill = (skill: string) => {
+    setResume({ ...resume, skills: [...resume.skills, skill] });
+  };
+
+  const handleRemoveSkill = (index: number) => {
+    setResume({
+      ...resume,
+      skills: resume.skills.filter((_, i) => i !== index),
+    });
+  };
+
+  const handleAddEducation = () => {
+    setResume({
+      ...resume,
+      educations: [
+        ...resume.educations,
+        {
+          institution: "",
+          course: "",
+          educationLevel: "",
+          startDate: "",
+          endDate: "",
+          inProgress: false,
+        },
+      ],
+    });
+  };
+
+  const handleRemoveEducation = (index: number) => {
+    setResume({
+      ...resume,
+      educations: resume.educations.filter((_, i) => i !== index),
+    });
+  };
+
+  const handleUpdateEducation = (index: number, field: string, value: any) => {
+    const newEducations = [...resume.educations];
+    newEducations[index] = { ...newEducations[index], [field]: value };
+    setResume({ ...resume, educations: newEducations });
+  };
+
+  const handleAddExperience = () => {
+    setResume({
+      ...resume,
+      experiences: [
+        ...resume.experiences,
+        {
+          company: "",
+          position: "",
+          startDate: "",
+          endDate: "",
+          currentJob: false,
+          description: "",
+        },
+      ],
+    });
+  };
+
+  const handleRemoveExperience = (index: number) => {
+    setResume({
+      ...resume,
+      experiences: resume.experiences.filter((_, i) => i !== index),
+    });
+  };
+
+  const handleUpdateExperience = (index: number, field: string, value: any) => {
+    const newExperiences = [...resume.experiences];
+    newExperiences[index] = { ...newExperiences[index], [field]: value };
+    setResume({ ...resume, experiences: newExperiences });
+  };
+
+  const handleAddCertification = () => {
+    setResume({
+      ...resume,
+      certifications: [
+        ...resume.certifications,
+        {
+          name: "",
+          issuingOrganization: "",
+        },
+      ],
+    });
+  };
+
+  const handleRemoveCertification = (index: number) => {
+    setResume({
+      ...resume,
+      certifications: resume.certifications.filter((_, i) => i !== index),
+    });
+  };
+
+  const handleUpdateCertification = (
+    index: number,
+    field: string,
+    value: string
+  ) => {
+    const newCertifications = [...resume.certifications];
+    newCertifications[index] = { ...newCertifications[index], [field]: value };
+    setResume({ ...resume, certifications: newCertifications });
+  };
+
+  const saveResume = async () => {
+    try {
+      if (!resume.occupation || resume.occupation.length < 3) {
+        alert("A profissão deve ter pelo menos 3 caracteres");
+        return;
+      }
+      if (!resume.summary || resume.summary.length < 50) {
+        alert("O resumo profissional deve ter pelo menos 50 caracteres");
+        return;
+      }
+
+      console.log("Salvando currículo:", resume);
+
+      // TODO: Integração com API
+      // const response = await fetch('SUA_API_URL/resume', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(resume)
+      // });
+
+      alert("Currículo salvo com sucesso!");
+    } catch (error) {
+      console.error("Erro ao salvar currículo:", error);
+      alert("Erro ao salvar currículo");
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        automaticallyAdjustKeyboardInsets={false}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
       >
-        <Header label="Seu Perfil" />
-        <ProfileSection />
-        <View style={styles.resumeContainer}>
-          <Text style={styles.resumeTitle}>Currículo</Text>
-          <View style={{ gap: 15 }}>
-            <TextField
-              label="Cargo Atual"
-              placeholder="Insira seu cargo atual"
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <Header label="Seu Perfil" />
+
+          <ProfileSection />
+
+          <View style={styles.resumeContainer}>
+            <Text style={styles.resumeTitle}>Currículo</Text>
+
+            <BasicInformationSection
+              occupation={resume.occupation}
+              summary={resume.summary}
+              onOccupationChange={(text) =>
+                setResume({ ...resume, occupation: text })
+              }
+              onSummaryChange={(text) =>
+                setResume({ ...resume, summary: text })
+              }
             />
-            <TextField
-              label="Resumo Profissional"
-              placeholder="Fale um pouco sobre sua jornada"
-              options={{
-                multiline: true,
-              }}
+
+            <SkillsSection
+              skills={resume.skills}
+              onAddSkill={handleAddSkill}
+              onRemoveSkill={handleRemoveSkill}
             />
-            <View>
-              <TextField
-                label="Habilidades"
-                placeholder="Insira suas habilidades"
-                helperText="Separe-as por virgula. Ex: Javascript,Typescript"
-              />
-            </View>
-            <View>
-              <Text style={styles.educationTitle}>Educação</Text>
-              <TextField label="Curso" />
-              <TextField label="Instituição" />
-              <View style={{ flexDirection: "row", gap: 10 }}>
-                <TextField label="Data de Início" />
-                <TextField label="Data de Conclusão" />
-              </View>
-              <View style={{ flexDirection: "row", gap: 10 }}>
-                <TextField label="Nivel de formação" />
-                <TextField label="Ainda estou cursando" />
-              </View>
+
+            <EducationSection
+              educations={resume.educations}
+              onAdd={handleAddEducation}
+              onRemove={handleRemoveEducation}
+              onUpdate={handleUpdateEducation}
+            />
+
+            <ExperienceSection
+              experiences={resume.experiences}
+              onAdd={handleAddExperience}
+              onRemove={handleRemoveExperience}
+              onUpdate={handleUpdateExperience}
+            />
+
+            <CertificationSection
+              certifications={resume.certifications}
+              onAdd={handleAddCertification}
+              onRemove={handleRemoveCertification}
+              onUpdate={handleUpdateCertification}
+            />
+
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.saveButton} onPress={saveResume}>
+                <Text style={styles.saveButtonText}>Salvar Currículo</Text>
+              </TouchableOpacity>
             </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -62,28 +257,41 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
-    width: "100%",
   },
   scrollContent: {
-    gap: 15,
-    width: "100%",
+    paddingBottom: 120,
     alignItems: "center",
-    paddingBottom: 200,
   },
   resumeContainer: {
     width: "100%",
     paddingHorizontal: 20,
+    marginTop: 20,
   },
   resumeTitle: {
     color: "#FFF",
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
-    marginBottom: 15,
+    marginBottom: 20,
   },
-  educationTitle: {
-    color: "#c6c6c6",
-    fontSize: 20,
+  buttonContainer: {
+    alignItems: "center",
+    marginTop: 30,
+    marginBottom: 30,
+  },
+  saveButton: {
+    backgroundColor: "#F2A70D",
+    paddingVertical: 15,
+    paddingHorizontal: 50,
+    borderRadius: 25,
+    elevation: 5,
+    shadowColor: "#F2A70D",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+  },
+  saveButtonText: {
+    color: "#000",
+    fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 10,
   },
 });

@@ -1,7 +1,7 @@
-import { StyleSheet } from "react-native";
-import { HelperText, TextInput } from "react-native-paper";
+import { DimensionValue, StyleSheet } from "react-native";
+import { HelperText, TextInput, TextInputProps } from "react-native-paper";
 
-interface Props {
+interface Props extends Omit<TextInputProps, "mode" | "style" | "theme"> {
   label?: string;
   mode?: "flat" | "outlined";
   placeholder?: string;
@@ -9,7 +9,8 @@ interface Props {
   right?: React.ReactNode;
   left?: React.ReactNode;
   helperText?: string;
-  options?: object;
+  width?: DimensionValue;
+  error?: boolean;
 }
 
 export default function TextField({
@@ -20,22 +21,25 @@ export default function TextField({
   right,
   left,
   helperText,
-  options,
+  width,
+  error = false,
+  ...rest
 }: Props) {
   return (
     <>
       <TextInput
         label={label}
         mode={mode}
-        style={styles.input}
+        style={[styles.input, width ? { width } : null]}
         secureTextEntry={isPassword}
         outlineStyle={styles.inputOutline}
         theme={{
           colors: {
             onSurfaceVariant: "#F2A70D",
             primary: "#F2A70D",
-            outline: "#F2A70D",
+            outline: error ? "#ff4444" : "#F2A70D",
             text: "#fff",
+            error: "#ff4444",
           },
         }}
         placeholder={placeholder}
@@ -43,20 +47,29 @@ export default function TextField({
         placeholderTextColor="#999"
         right={right}
         left={left}
+        error={error}
+        {...rest}
       />
-      {helperText && <HelperText type="info">{helperText}</HelperText>}
+      {helperText && (
+        <HelperText type={error ? "error" : "info"} style={styles.helperText}>
+          {helperText}
+        </HelperText>
+      )}
     </>
   );
 }
 
 const styles = StyleSheet.create({
   input: {
-    width: "80%",
+    width: "80%", // Valor padrão
     backgroundColor: "transparent",
   },
   inputOutline: {
     borderRadius: 20,
-    borderColor: "#F2A70D",
     borderWidth: 1,
+  },
+  helperText: {
+    width: "80%",
+    color: "#999",
   },
 });

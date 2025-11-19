@@ -36,3 +36,38 @@ export interface Job {
 export type RoadmapNavigationParams = {
   roadmap: Roadmap;
 };
+
+export interface Education {
+  id?: number;
+  institution: string;
+  course: string;
+  educationLevel: string;
+  startDate: string;
+  endDate?: string;
+  inProgress: boolean;
+}
+
+export interface Experience {
+  id?: number;
+  company: string;
+  position: string;
+  startDate: string;
+  endDate?: string;
+  currentJob: boolean;
+  description: string;
+}
+
+export interface Certification {
+  id?: number;
+  name: string;
+  issuingOrganization: string;
+}
+
+export interface Resume {
+  occupation: string;
+  summary: string;
+  skills: string[];
+  educations: Education[];
+  experiences: Experience[];
+  certifications: Certification[];
+}
