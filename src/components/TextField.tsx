@@ -30,7 +30,8 @@ export default function TextField({
       <TextInput
         label={label}
         mode={mode}
-        style={[styles.input, width ? { width } : null]}
+        style={[styles.input, width !== undefined && { width }]}
+        contentStyle={styles.contentStyle}
         secureTextEntry={isPassword}
         outlineStyle={styles.inputOutline}
         theme={{
@@ -61,8 +62,11 @@ export default function TextField({
 
 const styles = StyleSheet.create({
   input: {
-    width: "80%", // Valor padrão
+    width: "80%",
     backgroundColor: "transparent",
+  },
+  contentStyle: {
+    paddingLeft: 10,
   },
   inputOutline: {
     borderRadius: 20,

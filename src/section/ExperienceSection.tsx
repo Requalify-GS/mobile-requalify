@@ -1,14 +1,16 @@
-// src/section/ExperienceSection.tsx
 import { StyleSheet, Text, View } from "react-native";
 import { IconButton, Switch } from "react-native-paper";
+import MaskedTextField from "../components/MaskTextField";
 import TextField from "../components/TextField";
 import { Experience } from "../types/roadmap.type";
+import { DATE_MASK } from "../utils/masks";
 
 interface Props {
   experiences: Experience[];
   onAdd: () => void;
   onRemove: (index: number) => void;
   onUpdate: (index: number, field: keyof Experience, value: any) => void;
+  onToggleCurrentJob: (index: number, value: boolean) => void;
 }
 
 export default function ExperienceSection({
@@ -16,6 +18,7 @@ export default function ExperienceSection({
   onAdd,
   onRemove,
   onUpdate,
+  onToggleCurrentJob,
 }: Props) {
   return (
     <View style={styles.container}>
@@ -58,22 +61,22 @@ export default function ExperienceSection({
           />
 
           <View style={styles.row}>
-            <TextField
+            <MaskedTextField
               label="Data de Início *"
               placeholder="DD/MM/AAAA"
               value={exp.startDate}
-              onChangeText={(text) => onUpdate(index, "startDate", text)}
+              onChangeText={(masked) => onUpdate(index, "startDate", masked)}
+              mask={DATE_MASK}
               width="48%"
-              keyboardType="numeric"
             />
 
-            <TextField
+            <MaskedTextField
               label="Data de Saída"
               placeholder="DD/MM/AAAA"
-              value={exp.endDate}
-              onChangeText={(text) => onUpdate(index, "endDate", text)}
+              value={exp.endDate || ""}
+              onChangeText={(masked) => onUpdate(index, "endDate", masked)}
+              mask={DATE_MASK}
               width="48%"
-              keyboardType="numeric"
               disabled={exp.currentJob}
             />
           </View>
@@ -81,11 +84,8 @@ export default function ExperienceSection({
           <View style={styles.switchContainer}>
             <Text style={styles.switchLabel}>Trabalho atualmente aqui</Text>
             <Switch
-              value={exp.currentJob}
-              onValueChange={(value) => {
-                onUpdate(index, "currentJob", value);
-                if (value) onUpdate(index, "endDate", "");
-              }}
+              value={!!exp.currentJob}
+              onValueChange={(value) => onToggleCurrentJob(index, value)} // ✅ UMA ÚNICA CHAMADA
               color="#F2A70D"
             />
           </View>

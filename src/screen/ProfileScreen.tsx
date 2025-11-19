@@ -1,4 +1,3 @@
-// src/screen/ProfileScreen.tsx
 import { useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -17,7 +16,7 @@ import EducationSection from "../section/EducationSection";
 import ExperienceSection from "../section/ExperienceSection";
 import ProfileSection from "../section/ProfileSection";
 import SkillsSection from "../section/SkillsSection";
-import { Resume } from "../types/roadmap.type";
+import { Education, Resume } from "../types/roadmap.type";
 
 export default function ProfileScreen() {
   const [resume, setResume] = useState<Resume>({
@@ -87,7 +86,11 @@ export default function ProfileScreen() {
     });
   };
 
-  const handleUpdateEducation = (index: number, field: string, value: any) => {
+  const handleUpdateEducation = (
+    index: number,
+    field: keyof Education,
+    value: any
+  ) => {
     const newEducations = [...resume.educations];
     newEducations[index] = { ...newEducations[index], [field]: value };
     setResume({ ...resume, educations: newEducations });
@@ -151,6 +154,30 @@ export default function ProfileScreen() {
     const newCertifications = [...resume.certifications];
     newCertifications[index] = { ...newCertifications[index], [field]: value };
     setResume({ ...resume, certifications: newCertifications });
+  };
+
+  const handleToggleEducationInProgress = (index: number, value: boolean) => {
+    setResume((prevResume) => {
+      const newEducations = [...prevResume.educations];
+      newEducations[index] = {
+        ...newEducations[index],
+        inProgress: value,
+        endDate: value ? "" : newEducations[index].endDate,
+      };
+      return { ...prevResume, educations: newEducations };
+    });
+  };
+
+  const handleToggleExperienceCurrentJob = (index: number, value: boolean) => {
+    setResume((prevResume) => {
+      const newExperiences = [...prevResume.experiences];
+      newExperiences[index] = {
+        ...newExperiences[index],
+        currentJob: value,
+        endDate: value ? "" : newExperiences[index].endDate,
+      };
+      return { ...prevResume, experiences: newExperiences };
+    });
   };
 
   const saveResume = async () => {
@@ -222,6 +249,7 @@ export default function ProfileScreen() {
               onAdd={handleAddEducation}
               onRemove={handleRemoveEducation}
               onUpdate={handleUpdateEducation}
+              onToggleInProgress={handleToggleEducationInProgress}
             />
 
             <ExperienceSection
@@ -229,6 +257,7 @@ export default function ProfileScreen() {
               onAdd={handleAddExperience}
               onRemove={handleRemoveExperience}
               onUpdate={handleUpdateExperience}
+              onToggleCurrentJob={handleToggleExperienceCurrentJob}
             />
 
             <CertificationSection
