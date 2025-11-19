@@ -1,13 +1,16 @@
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import JobsScreen from "../screen/JobsScreen";
+import ProfileScreen from "../screen/ProfileScreen";
 import RoadMapScreen from "../screen/RoadMapScreen";
 
 export type TabParamList = {
   Jobs: undefined;
   RoadMap: undefined;
+  Profile: undefined;
 };
 
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -15,6 +18,7 @@ const Tab = createBottomTabNavigator<TabParamList>();
 export default function TabNavigator() {
   return (
     <Tab.Navigator
+      initialRouteName="RoadMap"
       screenOptions={{
         tabBarActiveTintColor: "#F2A70D",
         tabBarInactiveTintColor: "#999",
@@ -46,6 +50,16 @@ export default function TabNavigator() {
               size={size}
               color={color}
             />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person-circle-outline" size={size} color={color} />
           ),
         }}
       />
