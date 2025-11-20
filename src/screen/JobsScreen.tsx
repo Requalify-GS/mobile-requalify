@@ -1,21 +1,46 @@
-import { ScrollView, StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, ScrollView, StyleSheet, Text } from "react-native";
 import { TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import aluraLogo from "../../assets/alura.png";
+import { jobsApi, LinkedInJob } from "../api/jobs";
 import Header from "../components/Header";
 import JobCard from "../components/JobCard";
 import TextField from "../components/TextField";
 
-const job = {
-  position: "Desenvolvedor React Native",
-  company: "Requalify",
-  companyLogo: aluraLogo,
-  location: "São Paulo, SP",
-  agoTime: "há 2 dias",
-  jobUrl: "https://www.linkedin.com/mynetwork/grow/",
-};
-
 export default function JobsScreen() {
+  const [jobs, setJobs] = useState<LinkedInJob[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState("");
+
+  const handleSearch = async (keyword: string) => {
+    if (!keyword.trim()) {
+      setJobs([]);
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const results = await jobsApi.searchJobs(keyword);
+      setJobs(results);
+    } catch (err) {
+      console.error("Erro ao buscar vagas:", err);
+      setJobs([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchKeyword) {
+        handleSearch(searchKeyword);
+      }
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, [searchKeyword]);
+
   return (
     <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
       <ScrollView
@@ -23,11 +48,37 @@ export default function JobsScreen() {
         contentContainerStyle={styles.scrollContent}
       >
         <Header label="Procure Vagas" />
+
         <TextField
           placeholder="Pesquisar"
+          value={searchKeyword}
+          onChangeText={setSearchKeyword}
           left={<TextInput.Icon icon="magnify" color="#999" />}
         />
-        <JobCard job={job} />
+
+        {loading && (
+          <ActivityIndicator
+            size="large"
+            color="#F2A70D"
+            style={styles.loader}
+          />
+        )}
+
+        {!loading && jobs.length === 0 && searchKeyword && (
+          <Text style={styles.emptyText}>Nenhuma vaga encontrada</Text>
+        )}
+
+        {!loading &&
+          jobs.map((job, index) => (
+            <JobCard
+              key={index}
+              job={{
+                ...job,
+                companyLogo:
+                  job.companyLogo || require("../../assets/alura.png"),
+              }}
+            />
+          ))}
       </ScrollView>
     </SafeAreaView>
   );
@@ -47,5 +98,14 @@ const styles = StyleSheet.create({
     width: "100%",
     flex: 1,
     alignItems: "center",
+  },
+  loader: {
+    marginTop: 30,
+  },
+  emptyText: {
+    color: "#999",
+    fontSize: 14,
+    textAlign: "center",
+    marginTop: 30,
   },
 });
