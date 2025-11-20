@@ -1,4 +1,3 @@
-// src/screen/SignUpScreen.tsx
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
@@ -6,6 +5,9 @@ import {
   ActivityIndicator,
   Alert,
   Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -75,86 +77,100 @@ export default function SignUpScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <Image
-          source={logoRequalify}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-        <View style={{ alignItems: "center" }}>
-          <Text style={styles.title}>Cadastro</Text>
-          <Text style={styles.subtitle}>Se você já possui uma conta.</Text>
-          <Text
-            style={styles.signUpText}
-            onPress={() => navigation.navigate("Login")}
-          >
-            Entre
-          </Text>
-        </View>
-
-        <View
-          style={{
-            width: "100%",
-            paddingHorizontal: 20,
-            alignItems: "center",
-            gap: 10,
-          }}
+    <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboardView}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          <TextField
-            label="Nome"
-            placeholder="Informe seu nome"
-            value={name}
-            onChangeText={setName}
-          />
-          {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
+          <View style={styles.content}>
+            <Image
+              source={logoRequalify}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+            <View style={{ alignItems: "center" }}>
+              <Text style={styles.title}>Cadastro</Text>
+              <Text style={styles.subtitle}>Se você já possui uma conta.</Text>
+              <Text
+                style={styles.signUpText}
+                onPress={() => navigation.navigate("Login")}
+              >
+                Entre
+              </Text>
+            </View>
 
-          <TextField
-            label="Email"
-            placeholder="Informe seu email"
-            value={username}
-            onChangeText={setUsername}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-          {errors.username && (
-            <Text style={styles.errorText}>{errors.username}</Text>
-          )}
-
-          <TextField
-            label="Senha"
-            placeholder="Informe sua senha"
-            value={password}
-            onChangeText={setPassword}
-            isPassword={isPassword}
-            right={
-              <TextInput.Icon
-                icon={icon}
-                color="#999"
-                onPress={() => setIsPassword(!isPassword)}
+            <View
+              style={{
+                width: "100%",
+                paddingHorizontal: 20,
+                alignItems: "center",
+                gap: 10,
+              }}
+            >
+              <TextField
+                label="Nome"
+                placeholder="Informe seu nome"
+                value={name}
+                onChangeText={setName}
               />
-            }
-          />
-          {errors.password && (
-            <Text style={styles.errorText}>{errors.password}</Text>
-          )}
-        </View>
+              {errors.name && (
+                <Text style={styles.errorText}>{errors.name}</Text>
+              )}
 
-        <TouchableOpacity
-          style={[
-            styles.button,
-            signUpMutation.isPending && styles.buttonDisabled,
-          ]}
-          onPress={handleSignUp}
-          disabled={signUpMutation.isPending}
-        >
-          {signUpMutation.isPending ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>Cadastrar</Text>
-          )}
-        </TouchableOpacity>
-      </View>
+              <TextField
+                label="Email"
+                placeholder="Informe seu email"
+                value={username}
+                onChangeText={setUsername}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+              {errors.username && (
+                <Text style={styles.errorText}>{errors.username}</Text>
+              )}
+
+              <TextField
+                label="Senha"
+                placeholder="Informe sua senha"
+                value={password}
+                onChangeText={setPassword}
+                isPassword={isPassword}
+                right={
+                  <TextInput.Icon
+                    icon={icon}
+                    color="#999"
+                    onPress={() => setIsPassword(!isPassword)}
+                  />
+                }
+              />
+              {errors.password && (
+                <Text style={styles.errorText}>{errors.password}</Text>
+              )}
+            </View>
+
+            <TouchableOpacity
+              style={[
+                styles.button,
+                signUpMutation.isPending && styles.buttonDisabled,
+              ]}
+              onPress={handleSignUp}
+              disabled={signUpMutation.isPending}
+            >
+              {signUpMutation.isPending ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.buttonText}>Cadastrar</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -164,10 +180,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
     flex: 1,
   },
+  keyboardView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+  },
   content: {
     flex: 1,
     alignItems: "center",
     gap: 25,
+    paddingBottom: 30,
   },
   logo: {
     width: 95,
