@@ -38,7 +38,7 @@ export default function LoginScreen() {
   const loginMutation = useMutation({
     mutationFn: authApi.login,
     onSuccess: async (data) => {
-      await authLogin(data.token);
+      await authLogin(data.token, data.id);
       navigation.navigate("Tabs");
     },
     onError: (error: any) => {

@@ -40,7 +40,7 @@ export default function SignUpScreen() {
   const signUpMutation = useMutation({
     mutationFn: authApi.signUp,
     onSuccess: async (data) => {
-      await authLogin(data.token);
+      await authLogin(data.token, data.id);
       Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
       navigation.navigate("Tabs");
     },

@@ -3,16 +3,20 @@ import { api } from "./client";
 
 export interface AuthResponse {
   token: string;
-  type: string;
-  prefix: string;
-  expiresAt: string;
+  username: string;
+  id: number;
 }
 
 export interface User {
   id: number;
   name: string;
   username: string;
-  password: string;
+}
+
+export interface UpdateUserData {
+  name?: string;
+  username?: string;
+  password?: string;
 }
 
 export const authApi = {
@@ -23,6 +27,20 @@ export const authApi = {
 
   signUp: async (userData: SignUpFormData): Promise<AuthResponse> => {
     const response = await api.post<AuthResponse>("/user", userData);
+    return response.data;
+  },
+
+  updateUser: async (id: number, userData: UpdateUserData): Promise<User> => {
+    const response = await api.put<User>(`/user/${id}`, userData);
+    return response.data;
+  },
+
+  deleteUser: async (id: number): Promise<void> => {
+    await api.delete(`/user/${id}`);
+  },
+
+  getUser: async (id: number): Promise<User> => {
+    const response = await api.get<User>(`/user/${id}`);
     return response.data;
   },
 };

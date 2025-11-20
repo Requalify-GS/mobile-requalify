@@ -1,7 +1,6 @@
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -13,6 +12,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../components/Header";
 import { RootStackParamList } from "../navigation/AppNavigator";
+import AccountActionsSection from "../section/AccountActionsSection";
 import BasicInformationSection from "../section/BasicInformationSection";
 import CertificationSection from "../section/CertificationSection";
 import EducationSection from "../section/EducationSection";
@@ -185,96 +185,6 @@ export default function ProfileScreen() {
     });
   };
 
-  const handleLogout = () => {
-    Alert.alert(
-      "Sair da Conta",
-      "Tem certeza que deseja sair?",
-      [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Sair",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              // TODO: Limpar token/sessão
-              // await AsyncStorage.removeItem('token');
-
-              console.log("Fazendo logout...");
-              navigation.reset({
-                index: 0,
-                routes: [{ name: "Login" }],
-              });
-            } catch (error) {
-              console.error("Erro ao fazer logout:", error);
-              alert("Erro ao fazer logout");
-            }
-          },
-        },
-      ],
-      { cancelable: true }
-    );
-  };
-
-  // ✅ FUNÇÃO DE DELETAR CONTA
-  const handleDeleteAccount = () => {
-    Alert.alert(
-      "Deletar Conta",
-      "⚠️ ATENÇÃO: Esta ação é irreversível! Todos os seus dados serão permanentemente excluídos. Deseja realmente deletar sua conta?",
-      [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Deletar",
-          style: "destructive",
-          onPress: () => {
-            // Segunda confirmação
-            Alert.alert(
-              "Confirmação Final",
-              "Digite 'DELETAR' para confirmar a exclusão da conta",
-              [
-                {
-                  text: "Cancelar",
-                  style: "cancel",
-                },
-                {
-                  text: "Confirmar",
-                  style: "destructive",
-                  onPress: async () => {
-                    try {
-                      // TODO: Chamada para API de deletar conta
-                      // await fetch('SUA_API_URL/user/delete', {
-                      //   method: 'DELETE',
-                      //   headers: { 'Authorization': `Bearer ${token}` }
-                      // });
-
-                      console.log("Deletando conta...");
-
-                      alert("Conta deletada com sucesso");
-
-                      navigation.reset({
-                        index: 0,
-                        routes: [{ name: "Login" }],
-                      });
-                    } catch (error) {
-                      console.error("Erro ao deletar conta:", error);
-                      alert("Erro ao deletar conta");
-                    }
-                  },
-                },
-              ]
-            );
-          },
-        },
-      ],
-      { cancelable: true }
-    );
-  };
-
   const saveResume = async () => {
     try {
       if (!resume.occupation || resume.occupation.length < 3) {
@@ -367,25 +277,9 @@ export default function ProfileScreen() {
                 <Text style={styles.saveButtonText}>Salvar Currículo</Text>
               </TouchableOpacity>
             </View>
-
-            <View style={styles.accountActionsContainer}>
-              <Text style={styles.accountActionsTitle}>Ações da Conta</Text>
-
-              <TouchableOpacity
-                style={styles.logoutButton}
-                onPress={handleLogout}
-              >
-                <Text style={styles.logoutButtonText}>Sair da Conta</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.deleteButton}
-                onPress={handleDeleteAccount}
-              >
-                <Text style={styles.deleteButtonText}>Deletar Conta</Text>
-              </TouchableOpacity>
-            </View>
           </View>
+
+          <AccountActionsSection />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -434,49 +328,6 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: "#000",
     fontSize: 18,
-    fontWeight: "bold",
-  },
-  accountActionsContainer: {
-    marginTop: 40,
-    marginBottom: 30,
-    paddingTop: 30,
-    borderTopWidth: 1,
-    borderTopColor: "#333",
-  },
-  accountActionsTitle: {
-    color: "#999",
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  logoutButton: {
-    backgroundColor: "transparent",
-    borderWidth: 2,
-    borderColor: "#F2A70D",
-    paddingVertical: 14,
-    paddingHorizontal: 40,
-    borderRadius: 25,
-    alignItems: "center",
-    marginBottom: 15,
-  },
-  logoutButtonText: {
-    color: "#F2A70D",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  deleteButton: {
-    backgroundColor: "transparent",
-    borderWidth: 2,
-    borderColor: "#ff4444",
-    paddingVertical: 14,
-    paddingHorizontal: 40,
-    borderRadius: 25,
-    alignItems: "center",
-  },
-  deleteButtonText: {
-    color: "#ff4444",
-    fontSize: 16,
     fontWeight: "bold",
   },
 });
