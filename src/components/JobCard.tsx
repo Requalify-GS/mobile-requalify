@@ -9,14 +9,23 @@ interface Props {
 export default function JobCard({ job }: Props) {
   return (
     <View style={styles.jobCard}>
-      <Image source={job.companyLogo} style={styles.jobLogo} />
+      <Image source={{ uri: job.companyLogo }} style={styles.jobLogo} />
       <View>
         <Text style={styles.jobPosition}>
           {truncateEllipsis(job.position, 22)}
         </Text>
         <Text style={styles.jobInfos}>{job.company}</Text>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text style={styles.jobInfos}>{job.location}</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            gap: 10,
+            minWidth: "60%",
+          }}
+        >
+          <Text style={styles.jobInfos}>
+            {truncateEllipsis(job.location, 17)}
+          </Text>
           <Text style={styles.jobInfos}>{job.agoTime}</Text>
         </View>
       </View>
