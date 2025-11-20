@@ -1,19 +1,77 @@
+// src/screen/SignUpScreen.tsx
 import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import logoRequalify from "../../assets/logo-requalify.png";
+import { authApi } from "../api/auth";
 import TextField from "../components/TextField";
+import { useAuth } from "../context/authContext";
 import { RootStackParamList } from "../navigation/AppNavigator";
+import { SignUpFormData, signUpSchema } from "../types/auth.type";
 
 export default function SignUpScreen() {
   const [isPassword, setIsPassword] = useState(true);
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<{
+    name?: string;
+    username?: string;
+    password?: string;
+  }>({});
+
   const icon = isPassword ? "eye" : "eye-off";
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { login: authLogin } = useAuth();
 
-  const signUp = () => {
-    navigation.navigate("Tabs");
+  const signUpMutation = useMutation({
+    mutationFn: authApi.signUp,
+    onSuccess: async (data) => {
+      await authLogin(data.token);
+      Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
+      navigation.navigate("Tabs");
+    },
+    onError: (error: any) => {
+      Alert.alert(
+        "Erro no Cadastro",
+        error.response?.data?.error || "Erro ao criar conta"
+      );
+    },
+  });
+
+  const handleSignUp = () => {
+    setErrors({});
+
+    const formData: SignUpFormData = { name, username, password };
+
+    const validation = signUpSchema.safeParse(formData);
+
+    if (!validation.success) {
+      const fieldErrors: {
+        name?: string;
+        username?: string;
+        password?: string;
+      } = {};
+      validation.error.issues.forEach((err) => {
+        const field = err.path[0] as keyof typeof fieldErrors;
+        fieldErrors[field] = err.message;
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+
+    signUpMutation.mutate(formData);
   };
 
   return (
@@ -26,9 +84,7 @@ export default function SignUpScreen() {
         />
         <View style={{ alignItems: "center" }}>
           <Text style={styles.title}>Cadastro</Text>
-          <Text style={styles.subtitle}>
-            Se você ainda já possui uma conta.
-          </Text>
+          <Text style={styles.subtitle}>Se você já possui uma conta.</Text>
           <Text
             style={styles.signUpText}
             onPress={() => navigation.navigate("Login")}
@@ -37,25 +93,66 @@ export default function SignUpScreen() {
           </Text>
         </View>
 
-        <TextField label="Nome" placeholder="Informe seu nome" />
+        <View
+          style={{
+            width: "100%",
+            paddingHorizontal: 20,
+            alignItems: "center",
+            gap: 10,
+          }}
+        >
+          <TextField
+            label="Nome"
+            placeholder="Informe seu nome"
+            value={name}
+            onChangeText={setName}
+          />
+          {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
 
-        <TextField label="Email" placeholder="Informe seu email" />
+          <TextField
+            label="Email"
+            placeholder="Informe seu email"
+            value={username}
+            onChangeText={setUsername}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          {errors.username && (
+            <Text style={styles.errorText}>{errors.username}</Text>
+          )}
 
-        <TextField
-          label="Senha"
-          placeholder="Informe sua senha"
-          isPassword={isPassword}
-          right={
-            <TextInput.Icon
-              icon={icon}
-              color="#999"
-              onPress={() => setIsPassword(!isPassword)}
-            />
-          }
-        />
+          <TextField
+            label="Senha"
+            placeholder="Informe sua senha"
+            value={password}
+            onChangeText={setPassword}
+            isPassword={isPassword}
+            right={
+              <TextInput.Icon
+                icon={icon}
+                color="#999"
+                onPress={() => setIsPassword(!isPassword)}
+              />
+            }
+          />
+          {errors.password && (
+            <Text style={styles.errorText}>{errors.password}</Text>
+          )}
+        </View>
 
-        <TouchableOpacity style={styles.button} onPress={() => signUp()}>
-          <Text style={styles.buttonText}>Cadastrar</Text>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            signUpMutation.isPending && styles.buttonDisabled,
+          ]}
+          onPress={handleSignUp}
+          disabled={signUpMutation.isPending}
+        >
+          {signUpMutation.isPending ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>Cadastrar</Text>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -103,9 +200,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  buttonDisabled: {
+    opacity: 0.6,
+  },
   buttonText: {
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  errorText: {
+    color: "#ff4444",
+    fontSize: 12,
+    paddingLeft: 5,
   },
 });
