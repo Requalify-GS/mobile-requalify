@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const JOBS_API_URL = "http://192.168.3.100:3000/api"; // Sua API Express
+
+const JOBS_API_URL = "http://localhost:3000/api"; // Sua API Express
 
 export interface LinkedInJob {
   position: string;

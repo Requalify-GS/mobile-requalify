@@ -42,7 +42,10 @@ export default function JobsScreen() {
   }, [searchKeyword]);
 
   return (
-    <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
+    <SafeAreaView
+      style={styles.container}
+      edges={["top", "left", "right", "bottom"]}
+    >
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -96,8 +99,17 @@ const styles = StyleSheet.create({
   scrollContent: {
     gap: 15,
     width: "100%",
-    flex: 1,
     alignItems: "center",
+    paddingBottom: 20,
+  },
+  loader: {
+    marginTop: 30,
+  },
+  emptyText: {
+    color: "#999",
+    fontSize: 14,
+    textAlign: "center",
+    marginTop: 30,
   },
   loader: {
     marginTop: 30,
