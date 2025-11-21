@@ -1,86 +1,86 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 interface AuthContextData {
-  token: string | null;
   userId: number | null;
-  isAuthenticated: boolean;
-  login: (token: string, userId: number) => Promise<void>;
+  userName: string | null;
+  token: string | null;
+  login: (token: string, id: number, name?: string) => Promise<void>;
   logout: () => Promise<void>;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setToken] = useState<string | null>(null);
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [userId, setUserId] = useState<number | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    loadStoredData();
+    loadStorageData();
   }, []);
 
-  const loadStoredData = async () => {
+  async function loadStorageData() {
     try {
       const storedToken = await AsyncStorage.getItem("@requalify:token");
       const storedUserId = await AsyncStorage.getItem("@requalify:userId");
+      const storedUserName = await AsyncStorage.getItem("@requalify:userName");
 
       if (storedToken && storedUserId) {
         setToken(storedToken);
         setUserId(Number(storedUserId));
+        setUserName(storedUserName);
       }
     } catch (error) {
-      console.error("Erro ao carregar dados:", error);
+      console.error("Erro ao carregar dados do storage:", error);
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }
 
-  const login = async (newToken: string, newUserId: number) => {
+  async function login(token: string, id: number, name?: string) {
     try {
-      await AsyncStorage.setItem("@requalify:token", newToken);
-      await AsyncStorage.setItem("@requalify:userId", newUserId.toString());
-      setToken(newToken);
-      setUserId(newUserId);
+      await AsyncStorage.setItem("@requalify:token", token);
+      await AsyncStorage.setItem("@requalify:userId", String(id));
+      if (name) {
+        await AsyncStorage.setItem("@requalify:userName", name);
+      }
+      setToken(token);
+      setUserId(id);
+      setUserName(name || null);
     } catch (error) {
-      console.error("Erro ao salvar dados:", error);
-      throw error;
+      console.error("Erro ao salvar token:", error);
     }
-  };
+  }
 
-  const logout = async () => {
+  async function logout() {
     try {
       await AsyncStorage.removeItem("@requalify:token");
       await AsyncStorage.removeItem("@requalify:userId");
+      await AsyncStorage.removeItem("@requalify:userName");
       setToken(null);
       setUserId(null);
+      setUserName(null);
     } catch (error) {
-      console.error("Erro ao remover dados:", error);
+      console.error("Erro ao fazer logout:", error);
     }
-  };
+  }
 
   return (
     <AuthContext.Provider
-      value={{
-        token,
-        userId,
-        isAuthenticated: !!token,
-        login,
-        logout,
-      }}
+      value={{ userId, userName, token, login, logout, isLoading }}
     >
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
-export const useAuth = () => {
+export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth deve ser usado dentro de AuthProvider");
+    throw new Error("useAuth deve ser usado dentro de um AuthProvider");
   }
   return context;
-};
+}
