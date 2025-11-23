@@ -26,6 +26,7 @@ import ProfileSection from "../section/ProfileSection";
 import SkillsSection from "../section/SkillsSection";
 import { Education, Experience, Resume } from "../types/roadmap.type";
 import { convertDateFromISO, convertDateToISO } from "../utils/date";
+import AboutSection from "../section/AboutSection";
 
 export default function ProfileScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -457,6 +458,7 @@ export default function ProfileScreen() {
                 </View>
               </View>
 
+              <AboutSection />
               <AccountActionsSection />
             </>
           )}
