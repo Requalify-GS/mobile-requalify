@@ -181,5 +181,7 @@ O processo de geração de roadmaps utiliza IA Generativa da seguinte forma:
 -  **João Vitor Silva Nascimento** - RM554694
 -  **Rafael Souza Bezerra** - RM557888
 
+## Demonstração
+https://www.youtube.com/watch?v=ms-msFgVV3A
 
 **ReQualify** - Transformando carreiras com Inteligência Artificial 🚀
